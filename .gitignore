@@ -73,7 +73,7 @@ notebooks/_sanity_tests.ipynb
 notebooks/_test_stash.ipynb
 notebooks/patch_test.ipynb
 
-# Other source files
+# Other source files and private scripts
 src/utils/utils_test.py
-
 scripts/test_script.py
+train.py
