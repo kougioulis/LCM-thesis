@@ -143,8 +143,8 @@ def plot_structure(
     return f, ax
 
 
-def plot_lagged_adjacency_structure(lagged_adj: torch.Tensor, node_names=None, node_color='indianred', node_size: int=1200, threshold: float=0.05,
-                                    ax=None, show=False, reduce=True):
+def plot_lagged_adjacency_structure(lagged_adj: torch.Tensor, node_names: list=None, node_color: str='indianred', node_size: int=1200, threshold: float=0.05,
+                                    ax=None, show: bool=False, reduce: bool=True):
     """
     Creates a nx.DiGraph straight from the lagged adjacency structure and plots it.
 
