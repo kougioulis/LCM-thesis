@@ -62,7 +62,7 @@ tensorboard_logs/
 logs/
 wandb/
 
-# data, too large to track
+# data, too large to track by git
 data/
 
 # Jupyter notebooks & other source files
@@ -73,7 +73,10 @@ notebooks/_sanity_tests.ipynb
 notebooks/_test_stash.ipynb
 notebooks/patch_test.ipynb
 
-# Other source files and private scripts
+# Other source files, private scripts
 src/utils/utils_test.py
+src/utils/cp_utils.py
 scripts/test_script.py
 train.py
+
+# private files & scripts related to training
