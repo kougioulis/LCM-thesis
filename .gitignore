@@ -78,9 +78,29 @@ src/utils/utils_test.py
 src/utils/cp_utils.py
 scripts/test_script.py
 
+# private files & scripts related to training
 configs/default.yaml
 train.py
 run
 src/utils/cli.py
+src/utils/update_base_yaml_script.py
+src/callbacks
 
-# private files & scripts related to training
+src/modules/sparseinformer_module.py
+src/modules/informer_rpe_module.py
+src/modules/patchinformer_module.py
+src/modules/patchtstinformer_module.py
+src/modules/patchtstinformer_learnable_pos_module.py
+src/modules/patchmlpinformer_module.py
+src/modules/spacetimeformer_module.py
+src/modules/patchtstspacetimeformer_module.py
+
+src/models/sparseinformer.py
+src/models/informer_rpe.py
+src/models/patchtstinformer_learnable_pos.py
+src/models/patchmlpinformer.py
+src/models/patchtstinformer.py
+src/models/patchinformer.py
+src/models/patchtstspacetimeformer.py
+src/models/spacetimeformer_test.py
+src/models/sparse_informer.py
