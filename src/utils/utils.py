@@ -177,10 +177,32 @@ def transform_mutual_information_to_y(ce_matrix: torch.tensor, reverse_lag: bool
     return ce_matrix
 
 
-def lagged_batch_crosscorrelation(points, max_lags, eps=1e-6):
-    # calculates the autocovariance matrix with a batch dimension
-    # lagged variables are concated in the same dimension.
-    # input: (B, time, var)
+def lagged_batch_crosscorrelation(points: torch.tensor, max_lags: int, eps: float=1e-6):
+    """
+    Computes lagged cross-correlations between variables at different time lags,
+    concatenating lagged variables along the batch dimension. It normalizes the result
+    using standard deviations to produce correlation coefficients.
+    
+    Args:
+        points (torch.Tensor): Input tensor of shape (B, N, D) where:
+            - B: batch size
+            - N: time dimension (number of time steps)
+            - D: number of variables/features
+        max_lags (int): Maximum number of lags to consider for the cross-correlation.
+        eps (float, optional): Small epsilon value for numerical stability to prevent
+            division by zero and NaN/Inf values. Defaults to 1e-6.
+    
+    Returns:
+        torch.Tensor: Lagged cross-correlation matrix of shape (B, D, D) containing
+            only forward-in-time correlations (excluding backwards-in-time links).
+            Each element [i, j] represents the correlation between variable i at the
+            current time and variable j at different lags.
+    
+    Notes:
+        - Uses an unbiased covariance estimate (division by N-1).
+        - Standard deviation is clamped to prevent numerical instability.
+        - Returns only the upper triangular portion corresponding to forward time lags.
+    """
     B, N, D = points.size()
 
     # roll to calculate lagged cov
@@ -214,40 +236,6 @@ def lagged_batch_crosscorrelation(points, max_lags, eps=1e-6):
     return corr[:, :D, D:]  # shape: (B, D, D)
 
 
-def inverse_variance_regularization(predictions: torch.tensor, correlations: torch.tensor, epsilon: float=1e-5) -> torch.tensor:
-    """
-    Regularize inverse variance of predictions
-    """
-    variance = 1 / (torch.abs(correlations) + epsilon)
-    penalty = torch.mean((predictions * variance) ** 2)
-
-    return penalty
-
-def corr_regularization(predictions, data, exp=1.5, epsilon=1e-8):
-    """
-    Penalize mismatch with crosscorrelation (CC) signal, emphasizing underprediction on strong CC entries.
-
-    Args
-        - predictions (torch.tensor): Predictions tensor of shape `[batch_size, num_vars, num_vars, max_lag]`
-        - data (torch.tensor): Data tensor of shape `[batch_size, timesteps, num_vars]`
-        - epsilon (float): Small value to avoid division by zero; default is `1e-8`.
-
-    Returns
-        - loss (torch.tensor): Regularization loss
-    """
-    max_lag = predictions.shape[3]
-    n_vars = data.shape[2]
-
-    corr = lagged_batch_crosscorrelation(data, max_lag)
-    y_corr = transform_corr_to_y(corr, max_lag, n_vars)
-
-    # normalize
-    norm_corr = (torch.abs(y_corr) - torch.abs(y_corr).min()) / (torch.abs(y_corr).max() - torch.abs(y_corr).min() + epsilon)
-
-    loss = torch.mean(((predictions - norm_corr) ** 2) * norm_corr**exp) # penalize under-over with mean weighted squared error
-
-    return loss
-
 def adaptive_threshold_regularization(predictions: torch.tensor, data: torch.tensor, percentile: int=75) -> torch.tensor:
     """
     Penalizes mismatch with crosscorrelation (CC) signal, based on a percentile threshold.
@@ -266,7 +254,7 @@ def adaptive_threshold_regularization(predictions: torch.tensor, data: torch.ten
     return penalty
 
 
-def corr_regularization(predictions, data, exp=1.5, epsilon=1e-8):
+def corr_regularization(predictions: torch.tensor, data: torch.tensor, exp: float=1.5, epsilon: float=1e-8) -> torch.tensor:
     """
     Penalize mismatch with crosscorrelation (CC) signal, emphasizing underprediction on strong CC entries.
 
@@ -424,155 +412,6 @@ def compute_roc_metrics(predictions, labels):
     auroc_score = auroc_metric(preds=predictions, target=labels)
 
     return roc_curve, auroc_score
-
-
-def run_pcmci_on_sample(sample: torch.Tensor, cond_test: str, max_lag: int=1):
-    """
-    Run PCMCI on a single time-series sample.
-
-    Args:
-        sample (Tensor): Time-series sample (T x D).
-        cond_test (str): Conditional independence test object (e.g., `"ParCorr"`).
-        max_lag (int): Maximum time lag (default is `1`).
-
-    Returns:
-        np.ndarray: Corrected q-value matrix from PCMCI.
-    """
-    if isinstance(sample, (tuple, list)):
-        sample = torch.stack(sample) if isinstance(sample[0], torch.Tensor) else torch.tensor(sample)
-    elif not isinstance(sample, torch.Tensor):
-        raise ValueError(f"Unexpected sample type: {type(sample)}")
-
-    # Normalize data
-    sample = (sample - sample.mean(dim=0)) / (sample.std(dim=0) + 1e-6)
-
-    dataframe = pp.DataFrame(
-        sample.detach().numpy().astype(float),
-        datatime=np.arange(len(sample)),
-        var_names=np.arange(sample.shape[1]),
-    )
-
-    pcmci = PCMCI(dataframe=dataframe, cond_ind_test=cond_test, verbosity=0)
-    results = pcmci.run_pcmci(tau_min=0, tau_max=max_lag, pc_alpha=None)
-    q_matrix = pcmci.get_corrected_pvalues(
-        p_matrix=results["p_matrix"], fdr_method="fdr_bh"
-    )
-    return q_matrix[:,:,1:]  # exclude contemporaneous edges
-
-
-@timing
-def run_pcmci_on_dataset(dataset, cond_test: str = "ParCorr", max_lag: int = 3):
-    """
-    Apply PCMCI to an entire dataset.
-
-    Args:
-        dataset (Iterable[Tuple[Tensor, np.ndarray]]): List of (time-series, ground truth) tuples.
-        cond_test: Conditional independence test object.
-        max_lag (int): Maximum lag for PCMCI.
-
-    Returns:
-        Tuple[np.ndarray, np.ndarray]: Predicted q-values and ground truth graphs.
-    """
-    if cond_test == "GPDC":
-        cond_test = GPDC()
-    elif cond_test == "ParCorr":
-        cond_test = ParCorr()
-    else:
-        raise ValueError(f"Unsupported test type: {cond_test}")
-
-    results = []
-    labels = []
-
-    for data_sample, ground_truth in dataset:
-        q_matrix = run_pcmci_on_sample(data_sample, cond_test, max_lag=max_lag)
-        lagged_q = np.swapaxes(np.flip(q_matrix[:, :, 1:], axis=2), 0, 1)
-        results.append(lagged_q)
-        labels.append(ground_truth)
-
-    return np.stack(results, axis=0), np.stack(labels, axis=0)
-
-
-def apply_pcmci_to_dataloader(dataloader, test_type="GPDC"):
-    """
-    Apply PCMCI to a dataloader containing time-series batches.
-
-    Args:
-        dataloader (Iterable[Tuple[Tensor, Tensor]]): Iterable over `(x, y)` batches.
-        test_type (str): Conditional test (`"GPDC"` or `"ParCorr"`).
-
-    Returns:
-        Tuple[Tensor, Tensor]: Predicted q-values and ground truth labels.
-    """
-    cond_test = GPDC() if test_type == "GPDC" else ParCorr() if test_type == "ParCorr" else None
-    if cond_test is None:
-        raise ValueError(f"Unsupported test type: {test_type}")
-
-    all_preds, all_labels = [], []
-
-    for x_batch, y_batch in dataloader:
-        preds, _ = run_pcmci_on_dataset(x_batch, cond_test, max_lag=y_batch.shape[3])
-        all_preds.append(preds)
-        all_labels.append(y_batch)
-
-    return torch.Tensor(np.concatenate(all_preds)), torch.concat(all_labels)
-
-
-def evaluate_pcmci_direction_accuracy(data):
-    """
-    Evaluate directionality accuracy of PCMCI between two variables.
-
-    Args:
-        data (Tuple[Tensor, Tensor]): Tuple of (data, labels).
-
-    Returns:
-        float: Proportion of samples where correct direction is stronger.
-    """
-    cond_test = ParCorr()
-    x, _ = data
-    results, _ = run_pcmci_on_dataset(x, cond_test, max_lag=1)
-
-    results = torch.Tensor(results)
-    direction_correct = (
-        results[:, 0, 1].max(dim=1)[0] > results[:, 1, 0].max(dim=1)[0]
-    ).sum()
-
-    return direction_correct.item() / len(results)
-
-
-def compute_pcmci_roc_without_diagonal(dataloader, max_lag=1, num_vars=15):
-    """
-    Compute ROC/AUROC after masking diagonal self-dependencies.
-
-    Args:
-        dataloader (Iterable[Tuple[Tensor, Tensor]]): Data batches.
-        max_lag (int): Max lag to use in PCMCI.
-        num_vars (int): Number of variables in dataset.
-
-    Returns:
-        Tuple: ROC curve and AUROC score.
-    """
-    roc_metric = torchmetrics.classification.BinaryROC()
-    auroc_metric = torchmetrics.classification.BinaryAUROC()
-    cond_test = ParCorr()
-
-    preds_all, labels_all = [], []
-    for x_batch, y_batch in dataloader:
-        preds, _ = run_pcmci_on_dataset(x_batch, cond_test, max_lag=max_lag)
-        preds_all.append(torch.Tensor(preds))
-        labels_all.append(torch.Tensor(y_batch))
-
-    preds = torch.concat(preds_all, dim=0)
-    labels = torch.concat(labels_all, dim=0)
-
-    mask = ~torch.eye(num_vars, num_vars).flatten().bool()
-
-    def flatten_and_mask(batch):
-        return [x[:, :, 0].flatten()[mask] for x in batch]
-
-    masked_preds = torch.concat(flatten_and_mask(preds), dim=0)
-    masked_labels = torch.concat(flatten_and_mask(labels), dim=0)
-
-    return compute_roc_metrics(masked_preds, masked_labels, roc_metric, auroc_metric)
 
 
 def run_varlingam_on_sample(sample, max_lag=3, threshold=1e-5):
