@@ -1,7 +1,18 @@
 # Large Causal Models for Temporal Causal Discovery
 
-![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python) ![PyTorch](https://img.shields.io/badge/PyTorch-black?logo=PyTorch) ![NumPy](https://img.shields.io/badge/-Numpy-013243?&logo=NumPy) ![Scikit-learn](https://img.shields.io/badge/Scikit--learn-20232A?&logoColor=61DAFB) ![Pandas](https://img.shields.io/badge/-Pandas-333333?style=flat&logo=pandas) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/gkorgkolis/TCS/blob/main/LICENSE) [![e-Locus](https://img.shields.io/badge/e--Locus-archive-9D2235?style=flat)](https://elocus.lib.uoc.gr/dlib/1/d/9/metadata-dlib-1764761882-792089-25440.tkl)
-
+<div style="white-space: nowrap;">
+  <img src="https://img.shields.io/badge/Python-3.10-blue?logo=python">
+  <img src="https://img.shields.io/badge/PyTorch-black?logo=PyTorch">
+  <img src="https://img.shields.io/badge/-Numpy-013243?&logo=NumPy">
+  <img src="https://img.shields.io/badge/Scikit--learn-20232A?&logoColor=61DAFB">
+  <img src="https://img.shields.io/badge/-Pandas-333333?style=flat&logo=pandas">
+  <a href="https://github.com/gkorgkolis/TCS/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg">
+  </a>
+  <a href="https://elocus.lib.uoc.gr/dlib/1/d/9/metadata-dlib-1764761882-792089-25440.tkl">
+    <img src="https://img.shields.io/badge/e--Locus-archive-9D2235?style=flat">
+  </a>
+</div>
 
 Reproducibility and source for experiments of the Thesis "Large Causal Models for Temporal Causal Discovery" at the University of Crete.
 
