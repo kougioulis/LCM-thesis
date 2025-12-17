@@ -63,7 +63,7 @@ logs/
 wandb/
 
 # data, too large to track by git
-data/
+#data/
 
 # Jupyter notebooks & other source files
 notebooks/_test.ipynb
