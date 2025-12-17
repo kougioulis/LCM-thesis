@@ -14,13 +14,14 @@
   </a>
 </div>
 
+
 Reproducibility and source for experiments of the Thesis "Large Causal Models for Temporal Causal Discovery" at the University of Crete.
 
-Complete source of the thesis text is available at: https://github.com/kougioulis/thesis.
+Complete LaTeX source of the thesis text is available at: https://github.com/kougioulis/thesis.
 
 ## 📌 Overview
 
-## TLDR; - Our contributions
+[Overview of the Training and Inference (Causal Discovery) phase of an LCM.](assets/causal-foundation-model.pdf)
 
 Contributions of this dissertation can be summarized as follows:
 
@@ -64,6 +65,12 @@ Alternatively, you can just install the dependencies from the `requirements.txt`
 ## 📔 Available Notebooks
 
 Notebooks for reproducible experiments and demo scripts (`running_examples.ipynb`) are available in the `code/notebooks/` folder. Experimental results in `.csv` form presented in the Thesis text are available in `code/data/results/`.
+
+  - `experimental_results.ipynb` contains the experimental results of Section ..
+
+  - `illustrative_example.ipynb` contains an example of loading a pre-trained LCM, preprocessing a minimal input time-series data and performing causal discovery. It illustrates both the discovered lagged causal graph, as well as the confidence weights of the lagged adjacency tensor.
+
+  - `ablation_experiments.ipynb` contains ablation experiments (Section ..) and zero-shot experiments on assessing the optimal mixture of realistic and synthetic training data (Section ..).
 
 ## 📁 Structure
 
