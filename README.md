@@ -125,38 +125,38 @@ We additionally provide the test sets for the experimental evaluations, availabl
 
 ### Synthetic
 
-* S_Joint
+- S_Joint
   [https://drive.google.com/drive/folders/1RB7umIQH2H3F-kIUWVvVJzJfgv12Sxy8](https://drive.google.com/drive/folders/1RB7umIQH2H3F-kIUWVvVJzJfgv12Sxy8)
-* Synth_230K
+- Synth_230K
   [https://drive.google.com/drive/folders/1iqwnrMHx8sXWJRd6iysrKg13b-PCwwJs](https://drive.google.com/drive/folders/1iqwnrMHx8sXWJRd6iysrKg13b-PCwwJs)
 
 
 ### Semi-Synthetic
 
-* fMRI-5
+- fMRI-5
   [https://github.com/kougioulis/LCM-thesis/tree/main/data/fMRI_5](https://github.com/kougioulis/LCM-thesis/tree/main/data/fMRI_5)
-* fMRI
+- fMRI
   [https://github.com/kougioulis/LCM-thesis/tree/main/data/fMRI](https://github.com/kougioulis/LCM-thesis/tree/main/data/fMRI)
-* Kuramoto-5
+- Kuramoto-5
   [https://drive.google.com/drive/folders/1Jh9e7o4c60MDkHykX4tJvjwfWZ-khC8f](https://drive.google.com/drive/folders/1Jh9e7o4c60MDkHykX4tJvjwfWZ-khC8f)
-* Kuramoto-10
+- Kuramoto-10
   [https://drive.google.com/drive/folders/1MT3u0xvk2Wg9C0QRJ78FF5VMFCFZeKhc](https://drive.google.com/drive/folders/1MT3u0xvk2Wg9C0QRJ78FF5VMFCFZeKhc)
 
 ### Simulated (Realistic)
 
-* Sim_45K
+- Sim_45K
   [https://drive.google.com/drive/folders/1VRi2q4VH7bgxv56lCLOZlUr12sVAyYka](https://drive.google.com/drive/folders/1VRi2q4VH7bgxv56lCLOZlUr12sVAyYka)
-* AirQualityMS
+- AirQualityMS
   [https://drive.google.com/drive/folders/15Ix7n-zIRKtJBZUTyfvtkI9bzKtl4M1O](https://drive.google.com/drive/folders/15Ix7n-zIRKtJBZUTyfvtkI9bzKtl4M1O)
 
 ### Mixture Collection
 
-* Synth_230K_Sim_45K
+- Synth_230K_Sim_45K
   [https://drive.google.com/drive/folders/1k0cXzh8PgNX5eY3nSpb6vBYPCiYQFRm9](https://drive.google.com/drive/folders/1k0cXzh8PgNX5eY3nSpb6vBYPCiYQFRm9)
 
 ### Additional
 
-* CDML (Lawrence et al., 2020)
+- CDML (Lawrence et al., 2020)
   [https://drive.google.com/drive/folders/1EOIg5J3u_HAHBXP-S7Kgl_cOsG2KjYNn](https://drive.google.com/drive/folders/1EOIg5J3u_HAHBXP-S7Kgl_cOsG2KjYNn) (not present in the main text, added for completeness.)
 
 ---
