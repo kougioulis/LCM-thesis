@@ -11,7 +11,7 @@
 ![NumPy](https://img.shields.io/badge/-NumPy-013243?\&logo=NumPy)
 ![Scikit-learn](https://img.shields.io/badge/Scikit--learn-20232A?\&logoColor=61DAFB)
 ![Pandas](https://img.shields.io/badge/-Pandas-333333?style=flat\&logo=pandas)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/gkorgkolis/TCS/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/kougioulis/LCM-thesis/blob/main/LICENSE)
 [![e-Locus](https://img.shields.io/badge/e--Locus-archive-9D2235?style=flat)](https://elocus.lib.uoc.gr/dlib/1/d/9/metadata-dlib-1764761882-792089-25440.tkl)
 </div>
 
