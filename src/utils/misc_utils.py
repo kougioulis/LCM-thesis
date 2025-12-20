@@ -376,7 +376,7 @@ def run_evaluation_experiments(models: dict, cpd_path: Path, out_dir: Path,
         if "CP_trf" in model_name:
             MAX_VAR = 5
         elif "LCM" in model_name:
-            MAX_VAR, MAX_LAG = 5, 3
+            MAX_VAR, MAX_LAG = 12, 3
 
         if fmri_data:
             if ("PCMCI" in model_name) or ("DYNOTEARS" in model_name) or ("VARLINGAM" in model_name):
