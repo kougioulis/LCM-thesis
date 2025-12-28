@@ -133,11 +133,11 @@ def get_random_prior_knowledge(
     # how many to pick
     n_true_paths = max(1, int(pct_true * len(all_paths)))
     n_false_paths = max(1, int(pct_false * len(all_paths)))
-    n_excl_paths  = max(1, int(pct_exclude * len(all_paths)))
+    n_excl_paths = max(1, int(pct_exclude * len(all_paths)))
     if max_allowed:
         n_true_paths = min(n_true_paths, max_allowed)
         n_false_paths = min(n_false_paths, max_allowed)
-        n_excl_paths  = min(n_excl_paths, max_allowed)
+        n_excl_paths = min(n_excl_paths, max_allowed)
 
     # pick true paths
     sel_true_paths = random.sample(all_paths, n_true_paths)
@@ -320,11 +320,11 @@ def get_random_prior_knowledge_for_inference(
     # how many to pick
     n_true_paths = max(1, int(pct_true * len(all_paths)))
     n_false_paths = max(1, int(pct_false * len(all_paths)))
-    n_excl_paths  = max(1, int(pct_exclude * len(all_paths)))
+    n_excl_paths = max(1, int(pct_exclude * len(all_paths)))
     if max_allowed:
         n_true_paths = min(n_true_paths, max_allowed)
         n_false_paths = min(n_false_paths, max_allowed)
-        n_excl_paths  = min(n_excl_paths, max_allowed)
+        n_excl_paths = min(n_excl_paths, max_allowed)
 
     # pick true paths
     sel_true_paths = random.sample(all_paths, n_true_paths)

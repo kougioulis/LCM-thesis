@@ -430,10 +430,10 @@ def run_varlingam_on_sample(sample, max_lag=3, threshold=1e-5):
     lagged_adj = np.zeros((D, D, max_lag))  # shape [j, i, l]
 
     for lag, matrix in enumerate(coef_matrices):
-        l = max_lag - (lag + 1)  # match label convention
-        if l < 0 or l >= max_lag:
+        lag_l = max_lag - (lag + 1)  # match label convention
+        if lag_l < 0 or lag_l >= max_lag:
             continue
-        lagged_adj[:, :, l] = (np.abs(matrix.T) > threshold).astype(int)  # j → i flipped to i → j
+        lagged_adj[:, :, lag_l] = (np.abs(matrix.T) > threshold).astype(int)  # j → i flipped to i → j
 
     return lagged_adj
 
@@ -453,10 +453,10 @@ def varlingam_score_matrix(sample, max_lag=3):
     lagged_score_adj = np.zeros((D, D, max_lag))
 
     for lag, matrix in enumerate(coef_matrices):
-        l = max_lag - (lag + 1)
-        if l < 0 or l >= max_lag:
+        lag_l = max_lag - (lag + 1)
+        if lag_l < 0 or lag_l >= max_lag:
             continue
-        lagged_score_adj[:, :, l] = np.abs(matrix.T)  # Keep absolute value, no threshold
+        lagged_score_adj[:, :, lag_l] = np.abs(matrix.T)  # Keep absolute value, no threshold
 
     return lagged_score_adj
 
